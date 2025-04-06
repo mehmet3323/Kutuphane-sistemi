@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "pod-install": "^0.3.4"
+  },
+  "_npx": {
+    "packages": [
+      "pod-install"
+    ]
+  }
+}

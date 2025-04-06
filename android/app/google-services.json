@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "584699718413",
+    "project_id": "kutuphane-14257",
+    "storage_bucket": "kutuphane-14257.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:584699718413:android:708bc18056c5bd1c81de44",
+        "android_client_info": {
+          "package_name": "com.projex"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAN5jVcwGP-fEPGmUq_Ids1M6JovJNzca8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
