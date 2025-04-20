@@ -29,7 +29,7 @@ const LoginScreen = ({ navigation }) => {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       console.log('Giriş başarılı:', userCredential.user.uid);
-      navigation.navigate('Home');
+      navigation.navigate('MainApp', { screen: 'Home' });
     } catch (error) {
       console.error('Giriş hatası:', error);
       Alert.alert('Hata', 'Giriş yapılırken bir hata oluştu. Lütfen bilgilerinizi kontrol edin.');

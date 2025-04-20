@@ -12,13 +12,10 @@ const TabNavigator = () => {
     <Tab.Navigator
       tabBar={props => <BottomNavigation {...props} />}
       screenOptions={{headerShown: false}}>
-      <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="Favorites" component={Favorites} />
-      <Stack.Screen name="Search" component={Search} />
-      <Stack.Screen name="Profile" component={Profile} />
-      <Stack.Screen name="Home" component={Home} />
-      <Stack.Screen name="Register" component={Register} />
-      <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="Search" component={Search} />
+      <Tab.Screen name="Favorites" component={Favorites} />
+      <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   );
 };
@@ -27,7 +24,7 @@ const StackRoutes = () => {
   return (
     <Stack.Navigator
       screenOptions={{headerShown: false}}
-      initialRouteName="Favorites">
+      initialRouteName="Login">
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Favorites" component={Favorites} />
       <Stack.Screen name="Search" component={Search} />

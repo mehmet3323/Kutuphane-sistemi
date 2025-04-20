@@ -4,5 +4,7 @@ export default RoutesNames = {
   REGISTER: 'Register',
   FORGOT_PASSWORD: 'ForgotPassword',
   PROFILE: 'Profile',
-  TAB_SCREEN: 'TabScreen'
+  TAB_SCREEN: 'TabScreen',
+  SEARCH: 'Search',
+  FAVORITES: 'Favorites'
 };

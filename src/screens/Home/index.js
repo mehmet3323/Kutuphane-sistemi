@@ -110,14 +110,6 @@ const HomeScreen = ({ navigation }) => {
     <LinearGradient colors={['#1E2F97', '#081158']} style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Kitap Dünyası</Text>
-        <TouchableOpacity 
-          style={styles.logoutButton}
-          onPress={() => navigation.navigate('Login')}>
-          <Image 
-            source={require('../../assets/icons/back.png')} 
-            style={styles.logoutIcon} 
-          />
-        </TouchableOpacity>
       </View>
 
       <View style={styles.tabContainer}>

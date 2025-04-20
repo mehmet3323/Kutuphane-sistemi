@@ -1,51 +1,59 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+
+const windowWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    justifyContent: 'space-between',
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+  },
+  menu: {
+    width: windowWidth,
+    height: 70,
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    borderTopWidth: 1,
+    borderTopColor: '#E5E5E5',
+    paddingBottom: 10,
     position: 'absolute',
     bottom: 0,
-    left: 0,
-    right: 0,
-    flexDirection: 'row',
-    backgroundColor: '#ffffff',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    justifyContent: 'space-between',
-    borderTopWidth: 2,
-    borderTopColor: '#1E2F97',
-    elevation: 24,
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 12,
-    zIndex: 1000,
-    height: 65,
+    zIndex: 999,
   },
-  tab: {
+  tabItem: {
     alignItems: 'center',
-    flex: 1,
-    paddingHorizontal: 8,
     justifyContent: 'center',
   },
-  tabEmoji: {
-    fontSize: 24,
-    opacity: 0.7,
-    marginBottom: 2,
+  icon: {
+    width: 24,
+    height: 24,
+    resizeMode: 'contain',
+    tintColor: '#1E2F97',
   },
-  activeTabEmoji: {
-    opacity: 1,
-    transform: [{ scale: 1.2 }],
+  unpressIcon: {
+    width: 24,
+    height: 24,
+    resizeMode: 'contain',
+    tintColor: '#848282',
+  },
+  activeText: {
+    fontSize: 12,
     color: '#1E2F97',
-  },
-  tabLabel: {
-    fontSize: 11,
     marginTop: 4,
-    color: '#757575',
-    fontWeight: '500',
+    fontWeight: '600',
   },
-  activeTabLabel: {
-    color: '#1E2F97',
-    fontWeight: '700',
-    transform: [{ scale: 1.1 }],
+  inactiveText: {
+    fontSize: 12,
+    color: '#848282',
+    marginTop: 4,
+    fontWeight: '400',
   },
 });
+
+export default styles;

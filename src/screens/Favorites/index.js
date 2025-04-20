@@ -1,325 +1,129 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
-  FlatList,
+  ScrollView,
   TouchableOpacity,
+  FlatList,
   Image,
-  TextInput,
-  Dimensions,
-  Pressable,
 } from 'react-native';
+import SearchComponent from '../../components/SearchComponent';
+import CardComponent from '../../components/CardComponent';
 import BottomNavigation from '../../components/BottomNavigation';
-import icons from '../../assets/icons';
+import { Icons } from '../../assets';
 
-const windowWidth = Dimensions.get('window').width;
+import styles from './styles';
 
-const SORT_OPTIONS = [
-  {id: 'date', label: 'Eklenme Tarihi'},
-  {id: 'name', label: 'İsim'},
-  {id: 'status', label: 'Okuma Durumu'},
-];
-
-const CATEGORIES = [
-  {id: 'all', label: 'Tümü'},
-  {id: 'novel', label: 'Roman'},
-  {id: 'science', label: 'Bilim'},
-  {id: 'history', label: 'Tarih'},
-  {id: 'philosophy', label: 'Felsefe'},
-];
-
-const DUMMY_BOOKS = [
+// Örnek favori kitap verileri
+const favoriteBooks = [
   {
     id: '1',
     title: 'Suç ve Ceza',
-    author: 'Fyodor Dostoyevski',
-    cover: 'https://example.com/cover1.jpg',
-    status: 'Okundu',
-    category: 'novel',
+    location: 'Dünya Klasikleri',
+    rating: '4.8',
+    image: { uri: 'https://example.com/suc-ve-ceza.jpg' },
   },
   {
-    id: '2',
-    title: 'Evren',
-    author: 'Carl Sagan',
-    cover: 'https://example.com/cover2.jpg',
-    status: 'Okunuyor',
-    category: 'science',
+    id: '3',
+    title: 'Tutunamayanlar',
+    location: 'Türk Edebiyatı',
+    rating: '4.6',
+    image: { uri: 'https://example.com/tutunamayanlar.jpg' },
   },
-  // Daha fazla kitap eklenebilir
 ];
 
-const Favorites = ({ navigation }) => {
-  const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedSort, setSelectedSort] = useState('date');
-  const [showSortOptions, setShowSortOptions] = useState(false);
+// Kategori verileri
+const categories = [
+  { id: '1', name: 'Tümü' },
+  { id: '2', name: 'Dünya Klasikleri' },
+  { id: '3', name: 'Türk Edebiyatı' },
+  { id: '4', name: 'Bilim Kurgu' },
+  { id: '5', name: 'Fantastik' },
+];
 
-  const filteredBooks = DUMMY_BOOKS.filter(book => {
-    const matchesSearch = book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         book.author.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || book.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+const Favorites = () => {
+  const [selectedCategory, setSelectedCategory] = useState('1');
+  const [filteredBooks, setFilteredBooks] = useState(favoriteBooks);
 
-  const sortedBooks = [...filteredBooks].sort((a, b) => {
-    switch (selectedSort) {
-      case 'name':
-        return a.title.localeCompare(b.title);
-      case 'status':
-        return a.status.localeCompare(b.status);
-      default:
-        return 0; // date sorting would use actual dates
+  // Kategori seçildiğinde kitapları filtrele
+  const handleCategorySelect = (categoryId) => {
+    setSelectedCategory(categoryId);
+    
+    if (categoryId === '1') {
+      // Tümü seçildiğinde tüm favori kitapları göster
+      setFilteredBooks(favoriteBooks);
+    } else {
+      // Seçilen kategoriye göre filtrele
+      const category = categories.find(cat => cat.id === categoryId);
+      const filtered = favoriteBooks.filter(book => book.location === category.name);
+      setFilteredBooks(filtered);
     }
-  });
-
-  const renderBookCard = ({item}) => (
-    <Pressable
-      style={styles.bookCard}
-      onLongPress={() => {
-        // Uzun basma menüsü işlemleri
-      }}>
-      <Image
-        source={{uri: item.cover}}
-        style={styles.bookCover}
-        defaultSource={icons.book} // Varsayılan kitap ikonu
-      />
-      <View style={styles.bookInfo}>
-        <Text style={styles.bookTitle} numberOfLines={2}>
-          {item.title}
-        </Text>
-        <Text style={styles.bookAuthor} numberOfLines={1}>
-          {item.author}
-        </Text>
-        <View style={styles.statusContainer}>
-          <Text style={styles.statusText}>{item.status}</Text>
-        </View>
-      </View>
-    </Pressable>
-  );
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Favorilerim</Text>
-        <TouchableOpacity
-          style={styles.sortButton}
-          onPress={() => setShowSortOptions(!showSortOptions)}>
-          <Image source={icons.sort} style={styles.sortIcon} />
-        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Favorilerim</Text>
       </View>
-
+      
       <View style={styles.searchContainer}>
-        <Image source={icons.search} style={styles.searchIcon} />
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Kitap veya yazar ara"
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-        />
+        <SearchComponent />
       </View>
-
-      <View style={styles.categoriesContainer}>
-        <FlatList
-          data={CATEGORIES}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          renderItem={({item}) => (
+      
+      <View style={styles.categoryContainer}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {categories.map((category) => (
             <TouchableOpacity
+              key={category.id}
               style={[
                 styles.categoryButton,
-                selectedCategory === item.id && styles.selectedCategory,
+                selectedCategory === category.id && styles.selectedCategory,
               ]}
-              onPress={() => setSelectedCategory(item.id)}>
+              onPress={() => handleCategorySelect(category.id)}
+            >
               <Text
                 style={[
                   styles.categoryText,
-                  selectedCategory === item.id && styles.selectedCategoryText,
-                ]}>
-                {item.label}
-              </Text>
-            </TouchableOpacity>
-          )}
-          keyExtractor={item => item.id}
-          contentContainerStyle={styles.categoriesList}
-        />
-      </View>
-
-      {showSortOptions && (
-        <View style={styles.sortOptionsContainer}>
-          {SORT_OPTIONS.map(option => (
-            <TouchableOpacity
-              key={option.id}
-              style={[
-                styles.sortOption,
-                selectedSort === option.id && styles.selectedSortOption,
-              ]}
-              onPress={() => {
-                setSelectedSort(option.id);
-                setShowSortOptions(false);
-              }}>
-              <Text
-                style={[
-                  styles.sortOptionText,
-                  selectedSort === option.id && styles.selectedSortOptionText,
-                ]}>
-                {option.label}
+                  selectedCategory === category.id && styles.selectedCategoryText,
+                ]}
+              >
+                {category.name}
               </Text>
             </TouchableOpacity>
           ))}
+        </ScrollView>
+      </View>
+      
+      {filteredBooks.length > 0 ? (
+        <FlatList
+          data={filteredBooks}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <CardComponent
+              title={item.title}
+              location={item.location}
+              rating={item.rating}
+              image={item.image}
+            />
+          )}
+          contentContainerStyle={styles.bookList}
+          showsVerticalScrollIndicator={false}
+        />
+      ) : (
+        <View style={styles.emptyContainer}>
+          <Image 
+            source={Icons.heart} 
+            style={styles.emptyIcon} 
+            resizeMode="contain"
+          />
+          <Text style={styles.emptyText}>Henüz favori kitabınız bulunmamaktadır</Text>
+          <Text style={styles.emptySubText}>Kitapları favorilere ekleyerek burada görüntüleyebilirsiniz</Text>
         </View>
       )}
-
-      <FlatList
-        data={sortedBooks}
-        renderItem={renderBookCard}
-        keyExtractor={item => item.id}
-        numColumns={2}
-        contentContainerStyle={styles.bookList}
-        showsVerticalScrollIndicator={false}
-      />
-      <BottomNavigation navigation={navigation} activeTab="Favorites" />
+      
+      <BottomNavigation />
     </View>
   );
 };
 
 export default Favorites;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    paddingTop: 20,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    marginBottom: 15,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  sortButton: {
-    padding: 8,
-  },
-  sortIcon: {
-    width: 24,
-    height: 24,
-    tintColor: '#000',
-  },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F5F5F5',
-    marginHorizontal: 20,
-    borderRadius: 12,
-    paddingHorizontal: 15,
-    marginBottom: 15,
-  },
-  searchIcon: {
-    width: 20,
-    height: 20,
-    tintColor: '#666',
-    marginRight: 10,
-  },
-  searchInput: {
-    flex: 1,
-    height: 40,
-    color: '#000',
-  },
-  categoriesContainer: {
-    marginBottom: 15,
-  },
-  categoriesList: {
-    paddingHorizontal: 15,
-  },
-  categoryButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    backgroundColor: '#F5F5F5',
-    marginHorizontal: 5,
-  },
-  selectedCategory: {
-    backgroundColor: '#1E2F97',
-  },
-  categoryText: {
-    color: '#666',
-    fontSize: 14,
-  },
-  selectedCategoryText: {
-    color: '#fff',
-  },
-  sortOptionsContainer: {
-    position: 'absolute',
-    top: 70,
-    right: 20,
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 10,
-    elevation: 5,
-    zIndex: 1000,
-  },
-  sortOption: {
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-  },
-  selectedSortOption: {
-    backgroundColor: '#F5F5F5',
-    borderRadius: 8,
-  },
-  sortOptionText: {
-    color: '#666',
-    fontSize: 14,
-  },
-  selectedSortOptionText: {
-    color: '#1E2F97',
-    fontWeight: 'bold',
-  },
-  bookList: {
-    padding: 10,
-  },
-  bookCard: {
-    flex: 1,
-    margin: 8,
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    elevation: 3,
-    maxWidth: (windowWidth - 36) / 2,
-  },
-  bookCover: {
-    width: '100%',
-    height: 200,
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
-  },
-  bookInfo: {
-    padding: 12,
-  },
-  bookTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#000',
-    marginBottom: 4,
-  },
-  bookAuthor: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 8,
-  },
-  statusContainer: {
-    backgroundColor: '#F5F5F5',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
-    alignSelf: 'flex-start',
-  },
-  statusText: {
-    fontSize: 12,
-    color: '#1E2F97',
-  },
-});
