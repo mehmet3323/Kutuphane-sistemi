@@ -32,7 +32,19 @@ const LoginScreen = ({ navigation }) => {
       navigation.navigate('MainApp', { screen: 'Home' });
     } catch (error) {
       console.error('Giriş hatası:', error);
-      Alert.alert('Hata', 'Giriş yapılırken bir hata oluştu. Lütfen bilgilerinizi kontrol edin.');
+      
+      // Hata koduna göre özel mesajlar
+      if (error.code === 'auth/network-request-failed') {
+        Alert.alert('Bağlantı Hatası', 'İnternet bağlantınızı kontrol edin ve tekrar deneyin. WiFi veya mobil veri bağlantınızın açık olduğundan emin olun.');
+      } else if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
+        Alert.alert('Giriş Hatası', 'E-posta veya şifre hatalı. Lütfen bilgilerinizi kontrol edin.');
+      } else if (error.code === 'auth/invalid-email') {
+        Alert.alert('Giriş Hatası', 'Geçersiz e-posta formatı. Lütfen geçerli bir e-posta adresi girin.');
+      } else if (error.code === 'auth/too-many-requests') {
+        Alert.alert('Giriş Hatası', 'Çok fazla başarısız giriş denemesi. Lütfen daha sonra tekrar deneyin veya şifrenizi sıfırlayın.');
+      } else {
+        Alert.alert('Hata', `Giriş yapılırken bir hata oluştu: ${error.message || error}`);
+      }
     }
   };
 

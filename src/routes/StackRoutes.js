@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {Login, Register, ForgotPassword, Home, Profile, Search, Favorites} from '../screens';
+import {Login, Register, ForgotPassword, Home, Profile, Favorites} from '../screens';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import BottomNavigation from '../components/BottomNavigation';
 
@@ -13,7 +13,6 @@ const TabNavigator = () => {
       tabBar={props => <BottomNavigation {...props} />}
       screenOptions={{headerShown: false}}>
       <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Search" component={Search} />
       <Tab.Screen name="Favorites" component={Favorites} />
       <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
@@ -27,7 +26,6 @@ const StackRoutes = () => {
       initialRouteName="Login">
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Favorites" component={Favorites} />
-      <Stack.Screen name="Search" component={Search} />
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Register" component={Register} />
