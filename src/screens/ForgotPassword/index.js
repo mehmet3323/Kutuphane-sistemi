@@ -9,15 +9,18 @@ import {
   Platform,
   ScrollView,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
+import { auth } from '../../config/firebase';
+import { sendPasswordResetEmail } from 'firebase/auth';
 import LinearGradient from 'react-native-linear-gradient';
 import styles from './styles';
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
-  const [codeSent, setCodeSent] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleResetPassword = () => {
+  const handleResetPassword = async () => {
     if (!email) {
       Alert.alert('Uyarı', 'Lütfen email adresinizi giriniz.');
       return;
@@ -30,21 +33,38 @@ const ForgotPasswordScreen = ({ navigation }) => {
       return;
     }
 
-    // Kod gönderildi simülasyonu
-    const resetCode = Math.floor(100000 + Math.random() * 900000);
-    Alert.alert(
-      'Başarılı',
-      `Şifre sıfırlama kodu: ${resetCode}\n\nBu kod email adresinize gönderilmiştir.`,
-      [
-        {
-          text: 'Tamam',
-          onPress: () => {
-            setCodeSent(true);
-            navigation.navigate('Login');
+    try {
+      setLoading(true);
+      // Firebase'in şifre sıfırlama fonksiyonunu kullan
+      await sendPasswordResetEmail(auth, email);
+      
+      // Başarılı mesajı göster
+      Alert.alert(
+        'Başarılı',
+        'Şifre sıfırlama bağlantısı e-posta adresinize gönderildi. Lütfen e-postanızı kontrol edin.',
+        [
+          {
+            text: 'Tamam',
+            onPress: () => navigation.navigate('Login')
           }
-        }
-      ]
-    );
+        ]
+      );
+    } catch (error) {
+      console.error('Şifre sıfırlama hatası:', error);
+      
+      // Hata koduna göre özel mesajlar
+      if (error.code === 'auth/user-not-found') {
+        Alert.alert('Hata', 'Bu e-posta adresi ile kayıtlı bir kullanıcı bulunamadı.');
+      } else if (error.code === 'auth/invalid-email') {
+        Alert.alert('Hata', 'Geçersiz e-posta formatı. Lütfen geçerli bir e-posta adresi girin.');
+      } else if (error.code === 'auth/network-request-failed') {
+        Alert.alert('Bağlantı Hatası', 'İnternet bağlantınızı kontrol edin ve tekrar deneyin.');
+      } else {
+        Alert.alert('Hata', `Şifre sıfırlama işlemi sırasında bir hata oluştu: ${error.message || error}`);
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -76,10 +96,14 @@ const ForgotPasswordScreen = ({ navigation }) => {
             />
 
             <TouchableOpacity 
-              style={[styles.resetButton, !email && styles.resetButtonDisabled]} 
+              style={[styles.resetButton, (!email || loading) && styles.resetButtonDisabled]} 
               onPress={handleResetPassword}
-              disabled={!email}>
-              <Text style={styles.resetButtonText}>Şifre Sıfırlama Kodu Gönder</Text>
+              disabled={!email || loading}>
+              {loading ? (
+                <ActivityIndicator color="#FFFFFF" size="small" />
+              ) : (
+                <Text style={styles.resetButtonText}>Şifre Sıfırlama Bağlantısı Gönder</Text>
+              )}
             </TouchableOpacity>
 
             <View style={styles.loginContainer}>
