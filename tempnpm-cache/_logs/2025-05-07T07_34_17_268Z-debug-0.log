@@ -5,14 +5,9 @@
 4 silly config load:file:C:\Users\Mhmtm\OneDrive\Belgeler\CODE23\ProjeX\.npmrc
 5 silly config load:file:C:\Users\Mhmtm\.npmrc
 6 silly config load:file:C:\Users\Mhmtm\AppData\Roaming\npm\etc\npmrc
-7 verbose title npm run
-8 verbose argv "run"
-9 verbose logfile logs-max:10 dir:C:\Users\Mhmtm\OneDrive\Belgeler\CODE23\ProjeX\tempnpm-cache\_logs\2025-04-20T11_17_57_973Z-
-10 verbose logfile C:\Users\Mhmtm\OneDrive\Belgeler\CODE23\ProjeX\tempnpm-cache\_logs\2025-04-20T11_17_57_973Z-debug-0.log
+7 verbose title npm run android
+8 verbose argv "run" "android"
+9 verbose logfile logs-max:10 dir:C:\Users\Mhmtm\OneDrive\Belgeler\CODE23\ProjeX\tempnpm-cache\_logs\2025-05-07T07_34_17_268Z-
+10 verbose logfile C:\Users\Mhmtm\OneDrive\Belgeler\CODE23\ProjeX\tempnpm-cache\_logs\2025-05-07T07_34_17_268Z-debug-0.log
 11 silly logfile start cleaning logs, removing 1 files
-12 verbose cwd C:\Users\Mhmtm\OneDrive\Belgeler\CODE23\ProjeX
-13 verbose os Windows_NT 10.0.26100
-14 verbose node v20.18.0
-15 verbose npm  v11.2.0
-16 verbose exit 0
-17 info ok
+12 silly logfile done cleaning log files

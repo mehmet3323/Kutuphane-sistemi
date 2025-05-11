@@ -5,15 +5,9 @@
 4 silly config load:file:C:\Users\Mhmtm\OneDrive\Belgeler\CODE23\ProjeX\.npmrc
 5 silly config load:file:C:\Users\Mhmtm\.npmrc
 6 silly config load:file:C:\Users\Mhmtm\AppData\Roaming\npm\etc\npmrc
-7 verbose title npm exec react-native start
-8 verbose argv "exec" "--" "react-native" "start"
-9 verbose logfile logs-max:10 dir:C:\Users\Mhmtm\OneDrive\Belgeler\CODE23\ProjeX\tempnpm-cache\_logs\2025-04-05T14_34_33_109Z-
-10 verbose logfile C:\Users\Mhmtm\OneDrive\Belgeler\CODE23\ProjeX\tempnpm-cache\_logs\2025-04-05T14_34_33_109Z-debug-0.log
+7 verbose title npm run android
+8 verbose argv "run" "android"
+9 verbose logfile logs-max:10 dir:C:\Users\Mhmtm\OneDrive\Belgeler\CODE23\ProjeX\tempnpm-cache\_logs\2025-05-05T07_12_28_380Z-
+10 verbose logfile C:\Users\Mhmtm\OneDrive\Belgeler\CODE23\ProjeX\tempnpm-cache\_logs\2025-05-05T07_12_28_380Z-debug-0.log
 11 silly logfile start cleaning logs, removing 1 files
 12 silly logfile done cleaning log files
-13 verbose cwd C:\Users\Mhmtm\OneDrive\Belgeler\CODE23\ProjeX
-14 verbose os Windows_NT 10.0.26100
-15 verbose node v20.18.0
-16 verbose npm  v11.2.0
-17 verbose exit 1
-18 verbose code 1

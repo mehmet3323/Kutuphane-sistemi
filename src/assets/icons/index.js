@@ -14,6 +14,18 @@ const clock2 = require('./clock2.png');
 const cloud = require('./cloud.png');
 const star2 = require('./star2.png');
 const send = require('./send.png');
+// const logout = require('./logout.svg');
+
+// Add icon URLs for the missing icons
+const bookIcon = {uri: 'https://img.icons8.com/ios-filled/50/ffffff/book.png'};
+const plusIcon = {uri: 'https://img.icons8.com/ios-filled/50/ffffff/plus.png'};
+const heartFilledIcon = {uri: 'https://img.icons8.com/ios-filled/50/e57373/like.png'};
+const heartOutlineIcon = {uri: 'https://img.icons8.com/ios/50/555555/like.png'};
+const commentIcon = {uri: 'https://img.icons8.com/ios-filled/50/555555/comments.png'};
+const borrowIcon = {uri: 'https://img.icons8.com/ios-filled/50/555555/book-shelf.png'};
+const readIcon = {uri: 'https://img.icons8.com/ios-filled/50/555555/reading.png'};
+const logoutIcon = {uri: 'https://img.icons8.com/ios-filled/50/ffffff/exit.png'};
+
 export default {
   earth,
   david,
@@ -31,4 +43,12 @@ export default {
   star2,
   cloud,
   send,
+  logout: logoutIcon,
+  book: bookIcon,
+  plus: plusIcon,
+  heartFilled: heartFilledIcon,
+  heartOutline: heartOutlineIcon,
+  comment: commentIcon,
+  borrow: borrowIcon,
+  read: readIcon
 };

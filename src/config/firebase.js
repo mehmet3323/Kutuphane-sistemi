@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import { getAuth, connectAuthEmulator } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -13,11 +13,22 @@ const firebaseConfig = {
   appId: "1:584699718413:android:708bc18056c5bd1c81de44"
 };
 
+// Firebase uygulamasını başlat
 const app = initializeApp(firebaseConfig);
-const auth = initializeAuth(app, {
-  persistence: getReactNativePersistence(AsyncStorage)
-});
+
+// Auth servisini yapılandır
+const auth = getAuth(app);
+auth.useDeviceLanguage(); // Cihaz dilini kullan
+
+// Diğer servisleri yapılandır
 const firestore = getFirestore(app);
 const storage = getStorage(app);
+
+// Hata ayıklama için
+const DEBUG = false;
+if (DEBUG) {
+  console.log('Firebase yapılandırması:', firebaseConfig);
+  console.log('Firebase başlatıldı:', app);
+}
 
 export { app, auth, firestore, storage };

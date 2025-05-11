@@ -38,14 +38,7 @@ class MainApplication : Application(), ReactApplication {
   override fun onCreate() {
     super.onCreate()
     SoLoader.init(this, OpenSourceMergedSoMapping)
-    try {
-      if (FirebaseApp.getApps(this).isEmpty()) {
-        FirebaseApp.initializeApp(this)
-      }
-      FirebaseAuth.getInstance()
-    } catch (e: Exception) {
-      e.printStackTrace()
-    }
+    FirebaseApp.initializeApp(this)
     if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
       // If you opted-in for the New Architecture, we load the native entry point for this app.
       load()
