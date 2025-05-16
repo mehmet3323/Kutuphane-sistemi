@@ -11,15 +11,17 @@ import {
   TextInput,
   Alert,
   ActivityIndicator,
+  FlatList,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import BottomNavigation from '../../components/BottomNavigation';
-import { collection, query, where, getDocs, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, getDoc, setDoc, updateDoc, orderBy } from 'firebase/firestore';
 import { auth, firestore } from '../../config/firebase';
 import { signOut } from 'firebase/auth';
 import { libraryBooks } from '../Home';
 import Icons from '../../assets/icons';
 import styles from './styles';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const {width} = Dimensions.get('window');
 
@@ -37,6 +39,9 @@ const Profile = ({ navigation }) => {
   const [showHedefModal, setShowHedefModal] = useState(false);
   const [hedefValue, setHedefValue] = useState(50);
   const [userData, setUserData] = useState(null);
+  const [notifications, setNotifications] = useState([]);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   // Kalan günleri hesaplama fonksiyonu
   const calculateRemainingDays = (dueDate) => {
@@ -104,6 +109,59 @@ const Profile = ({ navigation }) => {
       console.error("Kitap hedefi güncellenirken hata:", error);
       Alert.alert("Hata", "Kitap hedefi güncellenirken bir hata oluştu.");
     }
+  };
+
+  // Bildirimleri çek
+  const loadNotifications = async () => {
+    if (!auth.currentUser) return;
+    try {
+      // Normal bildirimler
+      const q1 = query(
+        collection(firestore, "notifications"),
+        where("userId", "==", auth.currentUser.uid),
+        orderBy("createdAt", "desc")
+      );
+      const snapshot1 = await getDocs(q1);
+      const notifs1 = snapshot1.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        createdAt: doc.data().createdAt?.toDate ? doc.data().createdAt.toDate() : new Date(doc.data().createdAt)
+      }));
+
+      // Admin bildirimleri
+      const q2 = query(
+        collection(firestore, "admin_notifications"),
+        where("userId", "==", auth.currentUser.uid),
+        orderBy("createdAt", "desc")
+      );
+      const snapshot2 = await getDocs(q2);
+      const notifs2 = snapshot2.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+        createdAt: doc.data().createdAt?.toDate ? doc.data().createdAt.toDate() : new Date(doc.data().createdAt)
+      }));
+
+      // Bildirimleri birleştir ve tarihe göre sırala
+      const allNotifs = [...notifs1, ...notifs2].sort((a, b) => b.createdAt - a.createdAt);
+
+      setNotifications(allNotifs);
+      setUnreadCount(allNotifs.filter(n => !n.read).length);
+    } catch (e) {
+      // Hata yönetimi
+    }
+  };
+
+  // Bildirimleri okundu olarak işaretle
+  const markNotificationsAsRead = async () => {
+    if (!auth.currentUser) return;
+    const unread = notifications.filter(n => !n.read);
+    for (const notif of unread) {
+      const notifRef = doc(firestore, "notifications", notif.id);
+      await updateDoc(notifRef, { read: true });
+    }
+    setUnreadCount(0);
+    // Bildirimleri tekrar yükle
+    loadNotifications();
   };
 
   useEffect(() => {
@@ -224,6 +282,10 @@ const Profile = ({ navigation }) => {
     fetchUserData();
   }, [navigation, activeTab]);
 
+  useEffect(() => {
+    loadNotifications();
+  }, []);
+
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -290,6 +352,19 @@ const Profile = ({ navigation }) => {
       >
         <Image source={{uri: 'https://img.icons8.com/ios-filled/100/ffffff/book-stack.png'}} style={styles.profileIcon} />
         <Text style={styles.userName}>{userData?.fullName || auth.currentUser?.email?.split('@')[0] || "Kullanıcı"}</Text>
+        
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', width: '100%', marginTop: 8 }}>
+          <TouchableOpacity onPress={() => { setShowNotifications(true); markNotificationsAsRead(); }} style={{ marginLeft: 16 }}>
+            <Icon name="bell" size={28} color="#fff" />
+            {unreadCount > 0 && (
+              <View style={{
+                position: 'absolute', left: 18, top: -2, backgroundColor: 'red', borderRadius: 8, minWidth: 16, height: 16, justifyContent: 'center', alignItems: 'center'
+              }}>
+                <Text style={{ color: 'white', fontSize: 10, fontWeight: 'bold' }}>{unreadCount}</Text>
+              </View>
+            )}
+          </TouchableOpacity>
+        </View>
         
         <View style={styles.statsContainer}>
           <View style={styles.statItem}>
@@ -444,6 +519,43 @@ const Profile = ({ navigation }) => {
       </TouchableOpacity>
       
       <BottomNavigation navigation={navigation} activeTab="Profile" />
+
+      <Modal visible={showNotifications} transparent animationType="fade">
+        <View style={{
+          flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center'
+        }}>
+          <View style={{
+            backgroundColor: 'white', borderRadius: 10, padding: 20, width: '90%', maxHeight: '70%'
+          }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+              <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#1E2F97' }}>Bildirimler</Text>
+              <TouchableOpacity onPress={() => setShowNotifications(false)}>
+                <Icon name="close" size={22} color="#f44336" />
+              </TouchableOpacity>
+            </View>
+            {notifications.length === 0 ? (
+              <Text>Hiç bildiriminiz yok.</Text>
+            ) : (
+              <FlatList
+                data={notifications}
+                keyExtractor={item => item.id}
+                renderItem={({ item }) => (
+                  <View style={{
+                    padding: 10, borderBottomWidth: 1, borderBottomColor: '#eee',
+                    backgroundColor: item.read ? '#fff' : '#e3e9ff'
+                  }}>
+                    <Text style={{ color: '#1E2F97', fontWeight: item.read ? 'normal' : 'bold' }}>{item.message}</Text>
+                    <Text style={{ color: '#888', fontSize: 12 }}>
+                      {item.createdAt ? new Date(item.createdAt).toLocaleString('tr-TR') : ''}
+                    </Text>
+                  </View>
+                )}
+                style={{ maxHeight: 300 }}
+              />
+            )}
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };

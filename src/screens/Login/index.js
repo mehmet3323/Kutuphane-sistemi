@@ -8,17 +8,20 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
-  Alert
+  Alert,
+  ActivityIndicator
 } from 'react-native';
 import { auth } from '../../config/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import LinearGradient from 'react-native-linear-gradient';
 import styles from './styles';
 import { ForgotPassword } from '..';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -26,25 +29,41 @@ const LoginScreen = ({ navigation }) => {
       return;
     }
 
+    setLoading(true);
+
     try {
+      // Admin kontrolü
+      if (email === 'admin@gmail.com' && password === 'admin') {
+        await AsyncStorage.setItem('isAdmin', 'true');
+        await AsyncStorage.setItem('adminUser', JSON.stringify({
+          uid: 'admin',
+          email: 'admin@gmail.com',
+          isAdmin: true
+        }));
+        navigation.replace('AdminPanel');
+        return;
+      }
+
+      // Normal kullanıcı girişi
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       console.log('Giriş başarılı:', userCredential.user.uid);
       navigation.navigate('MainApp', { screen: 'Home' });
     } catch (error) {
       console.error('Giriş hatası:', error);
       
-      // Hata koduna göre özel mesajlar
       if (error.code === 'auth/network-request-failed') {
-        Alert.alert('Bağlantı Hatası', 'İnternet bağlantınızı kontrol edin ve tekrar deneyin. WiFi veya mobil veri bağlantınızın açık olduğundan emin olun.');
+        Alert.alert('Bağlantı Hatası', 'İnternet bağlantınızı kontrol edin ve tekrar deneyin.');
       } else if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password') {
         Alert.alert('Giriş Hatası', 'E-posta veya şifre hatalı. Lütfen bilgilerinizi kontrol edin.');
       } else if (error.code === 'auth/invalid-email') {
         Alert.alert('Giriş Hatası', 'Geçersiz e-posta formatı. Lütfen geçerli bir e-posta adresi girin.');
       } else if (error.code === 'auth/too-many-requests') {
-        Alert.alert('Giriş Hatası', 'Çok fazla başarısız giriş denemesi. Lütfen daha sonra tekrar deneyin veya şifrenizi sıfırlayın.');
+        Alert.alert('Giriş Hatası', 'Çok fazla başarısız giriş denemesi. Lütfen daha sonra tekrar deneyin.');
       } else {
-        Alert.alert('Hata', `Giriş yapılırken bir hata oluştu: ${error.message || error}`);
+        Alert.alert('Hata', `Giriş yapılırken bir hata oluştu: ${error.message}`);
       }
+    } finally {
+      setLoading(false);
     }
   };
 

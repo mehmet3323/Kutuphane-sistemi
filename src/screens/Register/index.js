@@ -56,7 +56,19 @@ const RegisterScreen = ({ navigation }) => {
       ]);
     } catch (error) {
       console.error('Hata detayı:', error);
-      Alert.alert('Hata', 'Kayıt işlemi sırasında bir hata oluştu.');
+      
+      // Hata koduna göre özel mesajlar
+      if (error.code === 'auth/network-request-failed') {
+        Alert.alert('Bağlantı Hatası', 'İnternet bağlantınızı kontrol edin ve tekrar deneyin. WiFi veya mobil veri bağlantınızın açık olduğundan emin olun.');
+      } else if (error.code === 'auth/email-already-in-use') {
+        Alert.alert('Kayıt Hatası', 'Bu e-posta adresi zaten kullanımda. Lütfen başka bir e-posta adresi deneyin veya giriş yapın.');
+      } else if (error.code === 'auth/invalid-email') {
+        Alert.alert('Kayıt Hatası', 'Geçersiz e-posta formatı. Lütfen geçerli bir e-posta adresi girin.');
+      } else if (error.code === 'auth/weak-password') {
+        Alert.alert('Kayıt Hatası', 'Şifre çok zayıf. Lütfen en az 6 karakterden oluşan daha güçlü bir şifre belirleyin.');
+      } else {
+        Alert.alert('Hata', `Kayıt işlemi sırasında bir hata oluştu: ${error.message || error}`);
+      }
     } finally {
       setLoading(false);
     }

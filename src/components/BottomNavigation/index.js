@@ -1,8 +1,10 @@
 import {Text, View, Image, TouchableOpacity} from 'react-native';
 import React from 'react';
 import icons from '../../assets/icons';
-import { RoutesNames } from '../../config';
+import RoutesNames from '../../config/RoutesNames';
 import styles from './styles';
+import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
+import { auth, firestore } from '../../config/firebase';
 
 const BottomNavigation = ({navigation, activeTab}) => {
   return (
@@ -19,10 +21,19 @@ const BottomNavigation = ({navigation, activeTab}) => {
       <TouchableOpacity onPress={() => navigation.navigate(RoutesNames.FAVORITES)}>
         <View style={styles.tabItem}>
           <Image 
-            source={{uri: 'https://img.icons8.com/ios-filled/50/4c669f/favorite-cart.png'}} 
+            source={{uri: 'https://img.icons8.com/ios-filled/50/4c669f/brain.png'}} 
             style={activeTab === 'Favorites' ? styles.icon : styles.unpressIcon} 
           />
-          <Text style={activeTab === 'Favorites' ? styles.activeText : styles.inactiveText}>Favoriler</Text>
+          <Text style={activeTab === 'Favorites' ? styles.activeText : styles.inactiveText}>Yapay Zeka</Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate(RoutesNames.SOCIAL)}>
+        <View style={styles.tabItem}>
+          <Image 
+            source={{uri: 'https://img.icons8.com/ios-filled/50/4c669f/groups.png'}} 
+            style={activeTab === 'Social' ? styles.icon : styles.unpressIcon} 
+          />
+          <Text style={activeTab === 'Social' ? styles.activeText : styles.inactiveText}>Sosyal</Text>
         </View>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate(RoutesNames.PROFILE)}>

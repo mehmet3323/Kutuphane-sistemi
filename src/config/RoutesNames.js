@@ -1,10 +1,13 @@
-export default RoutesNames = {
+const RoutesNames = {
   HOME: 'Home',
   LOGIN: 'Login',
   REGISTER: 'Register',
   FORGOT_PASSWORD: 'ForgotPassword',
   PROFILE: 'Profile',
   TAB_SCREEN: 'TabScreen',
-  SEARCH: 'Search',
-  FAVORITES: 'Favorites'
+  FAVORITES: 'Favorites',
+  ADMIN_PANEL: 'AdminPanel',
+  SOCIAL: 'Social',
 };
+
+export default RoutesNames;

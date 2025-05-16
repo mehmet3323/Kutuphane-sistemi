@@ -85,13 +85,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    // React Native Vector Icons için yapılandırma
-    project.ext.vectoricons = [
-        iconFontNames: [ 'Ionicons.ttf', 'FontAwesome.ttf', 'MaterialIcons.ttf' ]
-    ]
-    apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
-
-    namespace "com.projex"  // Bu satırdaki paket adını kullanacağız
+    namespace "com.projex"
     defaultConfig {
         applicationId "com.projex"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -113,8 +107,6 @@ android {
             signingConfig signingConfigs.debug
         }
         release {
-            // Caution! In production, you need to generate your own keystore file.
-            // see https://reactnative.dev/docs/signed-apk-android.
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
@@ -124,7 +116,6 @@ android {
 
 dependencies {
     implementation project(':react-native-vector-icons')
-    // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 
     if (hermesEnabled.toBoolean()) {
@@ -133,10 +124,7 @@ dependencies {
         implementation jscFlavor
     }
 
-    // Vector Icons
-    implementation project(':react-native-vector-icons')
-    
-    // Firebase dependencies - using BoM for version control
+    // Firebase dependencies
     implementation platform('com.google.firebase:firebase-bom:32.7.4')
     implementation 'com.google.firebase:firebase-core:21.1.1'
     implementation 'com.google.firebase:firebase-analytics:21.5.1'
@@ -144,3 +132,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore'
     implementation 'com.google.firebase:firebase-storage'
 }
+
+// Vector Icons yapılandırması - sadece bir kez uygulanmalı
+apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
