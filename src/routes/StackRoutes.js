@@ -2,6 +2,7 @@ import * as React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Login, Register, ForgotPassword, Home, Profile, Favorites, AdminPanel} from '../screens';
 import Social from '../screens/Social/Social';
+import Statistics from '../screens/Statistics';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import BottomNavigation from '../components/BottomNavigation';
 
@@ -16,8 +17,9 @@ const TabNavigator = () => {
       screenOptions={{headerShown: false}}>
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Favorites" component={Favorites} />
-      <Tab.Screen name="Profile" component={Profile} />
+      <Tab.Screen name="Statistics" component={Statistics} />
       <Tab.Screen name="Social" component={Social} />
+      <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   );
 };

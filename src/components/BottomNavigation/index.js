@@ -27,6 +27,15 @@ const BottomNavigation = ({navigation, activeTab}) => {
           <Text style={activeTab === 'Favorites' ? styles.activeText : styles.inactiveText}>Yapay Zeka</Text>
         </View>
       </TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate(RoutesNames.STATISTICS)}>
+        <View style={styles.tabItem}>
+          <Image 
+            source={{uri: 'https://img.icons8.com/ios-filled/50/4c669f/statistics.png'}} 
+            style={activeTab === 'Statistics' ? styles.icon : styles.unpressIcon} 
+          />
+          <Text style={activeTab === 'Statistics' ? styles.activeText : styles.inactiveText}>İstatistikler</Text>
+        </View>
+      </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate(RoutesNames.SOCIAL)}>
         <View style={styles.tabItem}>
           <Image 
